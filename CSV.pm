@@ -2,8 +2,8 @@
 #  Class Based CSV Parser/Writer
 # Written by DJ <dj@boxen.net>
 #
-# $Id: CSV.pm,v 1.2 2005/03/07 02:43:48 david Exp $
-
+# Being Modified by Colin Newell to make
+# better use of Text::CSV
 # Class::CSV::Base
 package Class::CSV::Base;
 
@@ -24,7 +24,7 @@ BEGIN {
 
   ## Variables
   use vars qw($VERSION);
-  $VERSION = do { my @r=(q$Revision: 1.3 $=~/\d+/g); sprintf "%d."."%02d"x$#r,@r};
+  $VERSION = do { my @r=(q$Revision: 1.4 $=~/\d+/g); sprintf "%d."."%02d"x$#r,@r};
 }
 
 sub _build_fields {
@@ -502,6 +502,8 @@ Class::CSV - Class based CSV parser/writer
 
 =head1 DESCRIPTION
 
+NOTE: This is not the standard CPAN module.  This is being modified at the moment.
+
 This module can be used to create objects from I<CSV> files, or to create I<CSV>
 files from objects. L<Text::CSV_XS> is used for parsing and creating I<CSV> file
 lines, so any limitations in L<Text::CSV_XS> will of course be inherant in this
@@ -786,6 +788,8 @@ David Radunz, E<lt>david@boxen.netE<gt>
 =head1 COPYRIGHT AND LICENSE
 
 Copyright 2004 by David Radunz
+
+FIXME: add something about my mods
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 

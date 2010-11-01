@@ -1,4 +1,10 @@
-Class/CSV version 0.01
+Class/CSV version 0.04
+===============================
+
+Caveat Emptor: This is a work in progress.  I'm modifying the existing
+CPAN module.  Possibly with an aim to get it updated on CPAN eventually
+but right now just to solve my problem.
+
 ===============================
 
 The README is used to introduce the module and provide instructions on
