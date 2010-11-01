@@ -7,7 +7,8 @@ WriteMakefile(
     'VERSION_FROM'	=> 'CSV.pm', # finds $VERSION
     'PREREQ_PM'		=> {
         Text::CSV_XS => 0.23,
-        Class::Accessor => 0.18
+        Class::Accessor => 0.18,
+        File::Temp => 0.22,
     }, # e.g., Module::Name => 1.1
     ($] >= 5.005 ?    ## Add these new keywords supported since 5.005
       (AUTHOR     => 'David Radunz <dj@office.netspace.net.au>') : ()),
