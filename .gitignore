@@ -1,2 +1,5 @@
 *.swp
 tags
+inc
+*.old
+*.bak
