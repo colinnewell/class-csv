@@ -1,44 +1,82 @@
-use Test::More;
+use Test::Most;
 require File::Temp;
+use FindBin;
 
 use_ok 'Class::CSV', 'Used Class:CSV';
 
 # test with file handle
-my @expected = ( { name => 'a', last => 'b', first => 'c', suffix => 'd'} , 
-                { name => '1', last => '3', first => '2', suffix => '4'} ); 
+my $tests = [
 {
-    my $file = create_temp_file("a,b,c,d\n1,3,2,4");
-    $columns = [qw/name last first suffix/];
+    fname => 'simple.csv',
+    columns => [qw/name last first suffix/],
+    expected => [ 
+            { name => 'a', last => 'b', first => 'c', suffix => 'd' }, 
+            { name => '1', last => '3', first => '2', suffix => '4' }, 
+        ], 
+},
+{
+    fname => 'blank_lines.csv',
+    columns => [qw/test a b/],
+    expected => [ 
+            { test => '1', a => '3', b => '4' }, 
+            { test => 'a', a => 'b', b => 'c' }, 
+        ], 
+},
+{
+    fname => 'uneven.csv',
+    columns => [qw/third second one/],
+    expected => [ 
+            { third => '1', second => '2', one => '3' }, 
+            { third => 'a'} , 
+            { third => 'b', second => '' } , 
+        ], 
+},
+];
+my $todo = [
+{
+    fname => 'multi-line.csv',
+    columns => [qw/rabbits kangaroos koalas/],
+    expected => [ 
+            { rabbits => 'a', kangaroos => 'b', koalas => 'c' }, 
+            { rabbits => 'a', kangaroos => 'mult\nline\n\value', koalas => 'here' }, 
+            { rabbits => 'd', kangaroos => 'e', koalas => 'f' }, 
+        ], 
+},
+];
+
+for my $test (@$tests)
+{
+    run_test($test);
+}
+
+TODO: {
+    local $TODO = 'Need to implement functionality';
+
+    for my $test (@$todo)
+    {
+        lives_ok { run_test($test) } 'Shouldn"t die';
+    }
+
+}
+
+done_testing();
+
+sub run_test
+{
+    my $test = shift;
     my $csv = Class::CSV->parse(
-            filename => $file->filename,
-            fields => $columns,
+            filename => "$FindBin::Bin/". $test->{fname},
+            fields => $test->{columns},
             );
     ok $csv, "CSV object should be intitialized";
 
+    my $expected = $test->{expected};
     foreach my $line ( @{ $csv->lines() } )
     {
-        my $expect = shift @expected;
+        my $expect = shift @$expected;
         for my $key (keys %$expect)
         {
             is $line->{$key}, $expect->{$key}, 'Checking value';
         }
     }
 }
-# uneven columns
-
-# test with filename
-
-# test blank lines
-# TODO: test multi-line values.
-
-done_testing();
-
-sub create_temp_file
-{
-    my $contents = shift;
-    my $fh = File::Temp->new();
-    print $fh $contents;
-    close $fh;
-    return $fh;
-}
-
