@@ -1,7 +1,24 @@
 Changes
-CSV.pm
+inc/Module/AutoInstall.pm
+inc/Module/Install.pm
+inc/Module/Install/AutoInstall.pm
+inc/Module/Install/Base.pm
+inc/Module/Install/Can.pm
+inc/Module/Install/Fetch.pm
+inc/Module/Install/Include.pm
+inc/Module/Install/Makefile.pm
+inc/Module/Install/Metadata.pm
+inc/Module/Install/Win32.pm
+inc/Module/Install/WriteAll.pm
+lib/Class/CSV.pm
 Makefile.PL
 MANIFEST
+META.yml			Module meta-data (added by MakeMaker)
 README
 t/1.t
-META.yml                                 Module meta-data (added by MakeMaker)
+t/basic_tests.t
+t/blank_lines.csv
+t/multi-line.csv
+t/simple.csv
+t/uneven.csv
+tags
