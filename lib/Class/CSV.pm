@@ -464,7 +464,10 @@ Class::CSV - Class based CSV parser/writer
 
   my $csv = Class::CSV->parse(
     filename => 'test.csv',
-    fields   => [qw/item qty sub_total/]
+    fields   => [qw/item qty sub_total/],
+    csv_xs_options => { 
+        binary => 1,
+    },
   );
 
   foreach my $line (@{$csv->lines()}) {
@@ -564,6 +567,12 @@ classdbi_objects will still work but its advisable to update your code.
 
 B<line_separator> - the line seperator to be included at the end of every
 line. defaulting to C<\n> (unix carriage return).
+
+=item *
+
+B<csv_xs_options> - options for the underlying L<Text::CSV_XS> object used to 
+parse the text.  These are passed to the constructor when creating the
+parser.
 
 =back
 
