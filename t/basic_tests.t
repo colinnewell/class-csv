@@ -38,7 +38,7 @@ my $todo = [
     columns => [qw/rabbits kangaroos koalas/],
     expected => [ 
             { rabbits => 'a', kangaroos => 'b', koalas => 'c' }, 
-            { rabbits => 'a', kangaroos => 'mult\nline\n\value', koalas => 'here' }, 
+            { rabbits => 'a', kangaroos => "multi \nline\n\value", koalas => 'here' }, 
             { rabbits => 'd', kangaroos => 'e', koalas => 'f' }, 
         ], 
 },
@@ -67,16 +67,18 @@ sub run_test
     my $csv = Class::CSV->parse(
             filename => "$FindBin::Bin/". $test->{fname},
             fields => $test->{columns},
+            csv_xs_options => { binary => 1 },
             );
     ok $csv, "CSV object should be intitialized";
 
     my $expected = $test->{expected};
+    note 'Testing file ' . $test->{fname};
     foreach my $line ( @{ $csv->lines() } )
     {
         my $expect = shift @$expected;
         for my $key (keys %$expect)
         {
-            is $line->{$key}, $expect->{$key}, 'Checking value';
+            eq_or_diff $line->{$key}, $expect->{$key}, 'Checking value';
         }
     }
 }
