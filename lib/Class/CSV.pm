@@ -607,7 +607,7 @@ removing the first line:
 
 =over 4
 
-  pop @lines;
+  shift @lines;
 
   $csv->lines(\@lines);
 
