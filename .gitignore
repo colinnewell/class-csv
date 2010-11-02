@@ -1,4 +1,6 @@
 *.swp
+pm_to_blib
+blib
 tags
 inc
 Makefile
