@@ -345,7 +345,7 @@ sub _do_parse {
                 unless (scalar @$row == 1 && $row->[0] eq ''); # blank line
   }
   $csv->eof or $csv->error_diag();
-  close $fh;
+  close $fh if $close_handle;
 
 }
 

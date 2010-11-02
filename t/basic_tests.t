@@ -69,12 +69,28 @@ sub run_test
             fields => $test->{columns},
             csv_xs_options => { binary => 1 },
             );
+	check_results($csv, $test->{expected});
+	ok open (my $fh, '<', "$FindBin::Bin/". $test->{fname}), 'Opened file for testing file handle';
+    my $csv2 = Class::CSV->parse(
+            filehandle => $fh,
+            fields => $test->{columns},
+            csv_xs_options => { binary => 1 },
+            );
+	check_results($csv2, $test->{expected});
+	ok close $fh => 'Should be able to close handle, i.e. it shouldn\'t be closed already';
+}
+
+sub check_results
+{
+	my $csv = shift;
+	my $expected = shift;
     ok $csv, "CSV object should be intitialized";
 
-    my $expected = $test->{expected};
+	is scalar @{ $csv->lines() }, scalar @$expected, 'Should have right number of lines';
+	my @expectClone = @$expected;
     foreach my $line ( @{ $csv->lines() } )
     {
-        my $expect = shift @$expected;
+        my $expect = shift @expectClone;
         for my $key (keys %$expect)
         {
             eq_or_diff $line->{$key}, $expect->{$key}, 'Checking value';
