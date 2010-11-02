@@ -38,7 +38,7 @@ my $todo = [
     columns => [qw/rabbits kangaroos koalas/],
     expected => [ 
             { rabbits => 'a', kangaroos => 'b', koalas => 'c' }, 
-            { rabbits => 'a', kangaroos => "multi \nline\n\value", koalas => 'here' }, 
+            { rabbits => 'a', kangaroos => "multi \nline\nvalue", koalas => 'here' }, 
             { rabbits => 'd', kangaroos => 'e', koalas => 'f' }, 
         ], 
 },
