@@ -215,26 +215,16 @@ sub _build_fields {
 }
 
 sub _do_parse {
-  my ($self, $line) = @_;
+    my ($self, $line) = @_;
 
-  confess "Unable to find field array ref to build object with\n"
-    unless (defined $self->{_field_list}
-      and ref $self->{_field_list} eq 'ARRAY');
+    confess "Unable to find field array ref to build object with\n"
+        unless (defined $self->{_field_list}
+                and ref $self->{_field_list} eq 'ARRAY');
 
-  my $csv = new Text::CSV_XS($self->{__csv_xs_options}->to_hash_ref());
-  my $r = $csv->parse($line);
-  if (defined $r and $r) {
-    my @columns = $csv->fields();
+    my @columns = @$line;
     for (my $i = 0; $i < @columns; $i++) {
-      $self->set(${$self->{_field_list}}[$i], $columns[$i]);
+        $self->set(${$self->{_field_list}}[$i], $columns[$i]);
     }
-  } else {
-    if ($csv->error_input()) {
-      confess "Failed to parse line: ". $csv->error_input(). "\n";
-    } else {
-      confess "Failed to parse line: unknown reason\n";
-    }
-  }
 }
 
 sub string {
@@ -328,35 +318,35 @@ sub _do_parse {
   my ($self, %opts) = @_;
 
   my @CSV_Content = ();
+  my $close_handle = 0;
+  my $fh;
   if (exists $opts{'filename'} and defined $opts{'filename'}) {
     confess "Cannot find filename: ". $opts{'filename'}. "\n"
       unless (-f $opts{'filename'});
     confess "Cannot read filename: ". $opts{'filename'}. "\n"
       unless (-r $opts{'filename'});
-    open(CSV, $opts{'filename'})
+    $close_handle = 1;
+    open $fh, '<', $opts{'filename'}
       or confess "Failed to open filename: ". $opts{'filename'}. ': '. $!. "\n";
-    while (my $line = <CSV>) {
-      push(@CSV_Content, $self->strip_crlf($line));
-    }
-    close(CSV);
   } elsif (exists $opts{'filehandle'} and defined $opts{'filehandle'}) {
     confess "filehandle provided is not a file handle\n"
       unless (defined(fileno($opts{'filehandle'})));
-    my $fh = $opts{'filehandle'};
-    while (my $line = <$fh>) {
-      push(@CSV_Content, $self->strip_crlf($line));
-    }
+    
+    $close_handle = 0;
+    $fh = $opts{'filehandle'};
+
   } else {
     confess "Please provide a filename/filehandle to parse\n";
   }
 
-  foreach my $line (@CSV_Content) {
-    unless ($line and $line !~ /^([,"']|\s)+$/) {
-      # Skip empty lines
-      next;
-    }
-    push(@{$self->{lines}}, $self->new_line(undef, { line => $line }));
+  my $csv = Text::CSV_XS->new( $self->{csv_xs_options}->to_hash_ref() ); 
+  while ( my $row = $csv->getline( $fh ) ) {
+    push(@{$self->{lines}}, $self->new_line( undef, { line => $row } ))
+                unless (scalar @$row == 1 && $row->[0] eq ''); # blank line
   }
+  $csv->eof or $csv->error_diag();
+  close $fh;
+
 }
 
 sub _do_parse_objects {

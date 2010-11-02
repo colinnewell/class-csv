@@ -64,6 +64,7 @@ done_testing();
 sub run_test
 {
     my $test = shift;
+    note 'Testing file ' . $test->{fname};
     my $csv = Class::CSV->parse(
             filename => "$FindBin::Bin/". $test->{fname},
             fields => $test->{columns},
@@ -72,7 +73,6 @@ sub run_test
     ok $csv, "CSV object should be intitialized";
 
     my $expected = $test->{expected};
-    note 'Testing file ' . $test->{fname};
     foreach my $line ( @{ $csv->lines() } )
     {
         my $expect = shift @$expected;
