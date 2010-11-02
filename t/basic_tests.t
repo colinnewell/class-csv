@@ -1,5 +1,4 @@
 use Test::Most;
-require File::Temp;
 use FindBin;
 
 use_ok 'Class::CSV', 'Used Class:CSV';
