@@ -30,8 +30,6 @@ my $tests = [
             { third => 'b', second => '' } , 
         ], 
 },
-];
-my $todo = [
 {
     fname => 'multi-line.csv',
     columns => [qw/rabbits kangaroos koalas/],
@@ -41,6 +39,8 @@ my $todo = [
             { rabbits => 'd', kangaroos => 'e', koalas => 'f' }, 
         ], 
 },
+];
+my $todo = [
 ];
 
 for my $test (@$tests)
